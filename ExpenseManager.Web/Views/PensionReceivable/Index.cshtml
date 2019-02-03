@@ -1,0 +1,125 @@
+﻿@model List<ExpenseManager.PensionReceivable.Dto.PensionReceivableDto>
+@using Abp.Web.Mvc.Extensions
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/PensionReceivable/Index.js")
+}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @L("PensionReceivableDetails")
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>@L("Amount")</th>
+                            <th>@L("DateReceived")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Amount</td>
+                                    <td>@item.DateReceived.ToString("dd-MMM-yyyy")</td>
+
+                                    <td class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">menu</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#" class="waves-effect waves-block edit-pensionReceivable" data-pensionReceivable-id="@item.Id" data-toggle="modal" data-target="#PensionReceivableEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                            <li><a href="#" class="waves-effect waves-block delete-pensionReceivable" data-pensionReceivable-id="@item.Id" data-pensionReceivable-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#PensionReceivableCreateModal">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="PensionReceivableCreateModal" tabindex="-1" role="dialog" aria-labelledby="PensionReceivableCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewPensionReceivable")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "PensionReceivable", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-PensionReceivable-details">
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="Amount">
+                                            <label class="form-label">@L("Amount")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="Date" id="Purpose" name="DateReceived" class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <label class="form-label">@L("DateReceived")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PensionReceivableEditModal" tabindex="-1" role="dialog" aria-labelledby="PensionReceivableEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

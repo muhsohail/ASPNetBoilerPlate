@@ -1,0 +1,230 @@
+﻿@model ExpenseManager.Web.Models.DashboardViewModel
+@using System.Web.Optimization
+@{
+    ViewBag.ActiveMenu = PageNames.Home; //The menu item will be active for this page.
+}
+@section styles {
+    <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
+}
+@section scripts{
+    @Scripts.Render("~/Bundles/home-index")
+}
+<div class="block-header">
+    <h2>Expense Details By Category</h2>
+</div>
+<!-- Widgets -->
+<div class="row clearfix">
+    @foreach (var category in Model.GetDashboardDataByExpenseCateogy)
+    {
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-cyan hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">playlist_add_check</i>
+                </div>
+                <div class="content">
+                    <div class="text">@category.Key.ToUpper()</div>
+                    <div class="number count-to" data-from="0" data-to=@category.Value data-speed="1000" data-fresh-interval="20"></div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<!-- #END# Widgets -->
+<!-- Table -->
+<div class="row clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2>Common Expense Settlement Summary</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Total Spent</th>
+                                <th>Per Person</th>
+                                <th>Returned</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var summary in Model.ByCommonExpenseSummary)
+                            {
+                                <tr>
+                                    <td>1</td>
+                                    <td>@summary.Key.ToUpper()</td>
+                                    <td>@Math.Floor(summary.Value.TotalSpent)</td>
+                                    <td>@Math.Floor(summary.Value.PerPerson)</td>
+                                    <td>@Math.Floor(summary.Value.Returned)</td>
+                                    <td>@Math.Floor(summary.Value.Pending)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2>Individual Expense Settlement Summary</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Total Spent</th>
+                                <th>Per Person</th>
+                                <th>Returned</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var summary in Model.ByIndividualExpenseSummary)
+                            {
+                                <tr>
+                                    <td>1</td>
+                                    <td>@summary.Key.ToUpper()</td>
+                                    <td>@Math.Floor(summary.Value.TotalSpent)</td>
+
+                                   @if (summary.Key.ToUpper().StartsWith("S"))
+                                   {
+                                       <td>@string.Format("{0} - (PerPerson+SpentByJonS)", @Math.Floor(summary.Value.PerPerson))</td>
+                                   }
+                                   else
+                                   {
+                                        <td>@Math.Floor(summary.Value.PerPerson)</td>
+
+                                   }
+                                    <td>@summary.Value.Returned</td>
+                                    <td>@Math.Floor(summary.Value.PerPerson - summary.Value.Returned)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -->
+<!-- Expense Details By Month -->
+<div class="row clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="header">
+                <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-6">
+                        <h2>Expense Details By Month</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="body">
+                <div id="real_time_chart" class="dashboard-flot-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# CPU Usage -->
+<div class="row clearfix">
+    <!-- Common Expense By Day -->
+    @foreach (var item in Model.GetAmountSpentByIndividual)
+    {
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="card">
+                <div class="body bg-cyan">
+                    <div class="font-bold m-b--35">Total Spent By @item.Key: @item.Value.Sum(x => x.Amount)  <span><small>Rs.</small></span></div>
+
+                    <ul class="dashboard-stat-list">
+                        @foreach (var value in item.Value)
+                        {
+
+                            <li>
+                                @value.When
+                                <span class="pull-right"><b>@value.Amount</b> <small> Rs.</small></span>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row clearfix">
+    <!-- Task Info -->
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="card">
+            <div class="header">
+                <h2>Things To Do</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Task</th>
+                                <th>Status</th>
+                                <th>Manager</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var task in Model.Tasks)
+                            {
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>@task.Task</td>
+                                    <td><span class="label bg-green">@task.OnusStatusName</span></td>
+
+                                    <td>@task.AssignedTo</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow=@task.Progress aria-valuemin="0" aria-valuemax="100" style="width: @task.Progress%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Task Info -->
+    <!-- Browser Usage -->
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+            <div class="header">
+                <h2>Pension Usage</h2>
+                <p style="margin-top:0; margin-bottom:0;margin-left:0;margin-right:0"><b>Total: </b>@Model.PensionUsageDetail.Total</p>
+                <p style="margin-top:0; margin-bottom:0;margin-left:0;margin-right:0"><b>Spent:</b>@Model.PensionUsageDetail.Spent</p>
+                <p style="margin-top:0; margin-bottom:0;margin-left:0;margin-right:0"><b>Remaining:</b>@Model.PensionUsageDetail.Remaining</p>
+            </div>
+            <div class="body">
+                <div id="donut_chart" class="dashboard-donut-chart"></div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Browser Usage -->
+</div>

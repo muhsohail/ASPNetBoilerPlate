@@ -1,0 +1,241 @@
+﻿@model ExpenseManager.Web.Models.OnusViewModel
+@using Abp.Web.Mvc.Extensions
+@using System.Web.Optimization
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Onus/Index.js")
+    @Scripts.Render("~/Bundles/home-index")
+
+}
+
+@section styles {
+    <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
+}
+
+<div class="row clearfix">
+    @foreach (var category in Model.OnusSummary)
+    {
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-cyan hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">playlist_add_check</i>
+                </div>
+                <div class="content">
+                    <div class="text">@category.Key.ToUpper()</div>
+                    <div class="number count-to" data-from="0" data-to=@category.Value data-speed="1000" data-fresh-interval="20"></div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row clearfix">
+
+    <ul class="nav nav-tabs tab-nav-right" role="tablist">
+        <li role="presentation" class="active"><a href="#activeUsers" data-toggle="tab">Active</a></li>
+        <li role="presentation"><a href="#inActiveUsers" data-toggle="tab">Inactive</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane animated fadeIn active" id="activeUsers">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("ActiveOnusEntries")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Task")</th>
+                                <th>@L("Status")</th>
+                                <th>@L("TaskAssignedTo")</th>
+                                <th>@L("Progress")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                var activeItems = Model.onusDtos.Where(x => !x.IsDeleted).ToList();
+                                foreach (var item in activeItems)
+                                {
+                                    <tr>
+                                        <td>@item.Task</td>
+                                        <td>@item.OnusStatusName</td>
+                                        <td>@item.AssignedTo</td>
+                                        <td>@item.Progress</td>
+
+                                        <td class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                <i class="material-icons">menu</i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#" class="waves-effect waves-block edit-onus" data-onus-id="@item.Id" data-toggle="modal" data-target="#OnusEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                                <li><a href="#" class="waves-effect waves-block delete-onus" data-onus-id="@item.Id" data-onus-name="@item.Task"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#OnusCreateModal">
+                        <i class="material-icons">add</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane animated fadeIn" id="inActiveUsers">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("InActiveOnusEntries")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Task")</th>
+                                <th>@L("Status")</th>
+                                <th>@L("TaskAssignedTo")</th>
+                                <th>@L("Progress")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                var inActiveItems = Model.onusDtos.Where(x => x.IsDeleted).ToList();
+                                foreach (var item in inActiveItems)
+                                {
+                                    <tr>
+                                        <td>@item.Task</td>
+                                        <td>@item.OnusStatusName</td>
+                                        <td>@item.AssignedTo</td>
+                                        <td>@item.Progress</td>
+
+                                        <td class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                <i class="material-icons">menu</i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#" class="waves-effect waves-block undo-onus" data-onus-id="@item.Id" data-onus-name="@item.Task"><i class="material-icons">delete_sweep</i>@L("UndoDelete")</a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="OnusCreateModal" tabindex="-1" role="dialog" aria-labelledby="OnusCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewOnus")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Onus", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-onus-details">
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="Task">
+                                            <label class="form-label">@L("Task")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            @Html.DropDownList("OnusStatuses", (IEnumerable<SelectListItem>)ViewData["OnusStatuses"], new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="Purpose" name="AssignedTo" class="form-control">
+                                            <label class="form-label">@L("Assignedto")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="Purpose" name="Progress" class="form-control">
+                                            <label class="form-label">@L("Progress")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="OnusEditModal" tabindex="-1" role="dialog" aria-labelledby="UOnusEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

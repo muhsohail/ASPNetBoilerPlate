@@ -1,0 +1,78 @@
+﻿@model ExpenseManager.Web.Models.UpdateSettlementViewModel
+@using ExpenseManager.Web.Models.Common.Modals
+@using Abp.Web.Mvc.Extensions
+
+@{
+    Layout = null;
+}
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Settlement/_EditSettlement.js")
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditSettlement")))
+
+<div class="card">
+    <div class="body">
+        @using (Html.BeginForm("Update", "Settlement", FormMethod.Post))
+        {
+
+            @Html.HiddenFor(model => model.UpdateSettlementDto.Id)
+
+            @*<h4 class="text-center">@L("Update")</h4>*@
+
+            @Html.AntiForgeryToken()
+
+            if (@ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> @ViewBag.ErrorMessage
+                </div>
+            }
+
+
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="UpdateSettlementDto.Amount" value="@Model.UpdateSettlementDto.Amount">
+                </div>
+            </div>
+
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="Date" class="form-control" name="UpdateSettlementDto.ReturnDate" value="@Model.UpdateSettlementDto.ReturnDate.ToString("yyyy-MM-dd")">
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-sm-12">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            @Html.DropDownListFor(x => x.ItemViewModel.SelectedItemId, Model.ItemViewModel.Items, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-sm-12">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            @Html.DropDownListFor(x => x.SettlementTypeModel.SelectedItemId, Model.SettlementTypeModel.Items, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="@Url.Action("Index", "Settlement")" cl class="btn btn-default waves-effect">@L("Back")</a>
+                    <button id="RegisterButton" class="btn bg-pink waves-effect" type="submit">@L("Update")</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

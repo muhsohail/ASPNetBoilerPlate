@@ -1,0 +1,76 @@
+﻿@model ExpenseManager.Loan.Dto.UpdateLoanDto
+
+@using ExpenseManager.Web.Models.Common.Modals
+@using Abp.Web.Mvc.Extensions
+
+@{
+    Layout = null;
+}
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users;
+}
+
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Loan/_EditLoan.js")
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditLoan")))
+
+<div class="card">
+    <div class="body">
+
+        @using (Html.BeginForm("Update", "Loan", FormMethod.Post))
+        {
+
+            @Html.HiddenFor(model => model.Id)
+
+            @Html.AntiForgeryToken()
+
+            if (@ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> @ViewBag.ErrorMessage
+                </div>
+            }
+
+
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="PersonName" value="@Model.PersonName">
+                </div>
+            </div>
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="LoanAmount" value="@Model.LoanAmount">
+                </div>
+            </div>
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="AmountReturned" value="@Model.AmountReturned">
+                </div>
+            </div>
+            <div class="form-group form-float">
+                <div class="form-line">
+                    @if (@Model.ReturnedDate.HasValue)
+                    {
+                        <input type="Date" class="form-control" name="ReturnedDate" value="@Model.ReturnedDate.Value.ToString("yyyy-MM-dd")">
+
+                    }
+                    else
+                    {
+                        <input type="Date" class="form-control" name="ReturnedDate" value="@Model.ReturnedDate">
+
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="@Url.Action("Index", "Loan")" cl class="btn btn-default waves-effect">@L("Back")</a>
+                    <button id="RegisterButton" class="btn bg-pink waves-effect" type="submit">@L("Update")</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

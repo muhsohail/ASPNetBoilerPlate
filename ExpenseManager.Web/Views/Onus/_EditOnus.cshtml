@@ -1,0 +1,74 @@
+﻿@model ExpenseManager.Web.Models.UpdateOnusViewModel
+
+@using ExpenseManager.Web.Models.Common.Modals
+@using Abp.Web.Mvc.Extensions
+
+@{
+    Layout = null;
+}
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Onus/_EditOnus.js")
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditOnus")))
+
+<div class="card">
+    <div class="body">
+        @using (Html.BeginForm("Update", "Onus", FormMethod.Post))
+        {
+
+            @Html.HiddenFor(model => model.UpdateOnusDto.Id)
+            @Html.HiddenFor(model => model.UpdateOnusDto.OnusStatusId)
+
+            @Html.AntiForgeryToken()
+
+            if (@ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> @ViewBag.ErrorMessage
+                </div>
+            }
+
+
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="UpdateOnusDto.Task" value="@Model.UpdateOnusDto.Task">
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-sm-12">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            @*@Html.DropDownList("OnusStatuses", (IEnumerable<SelectListItem>)ViewData["OnusStatuses"], new { @class = "form-control" })*@
+                            @Html.DropDownListFor(x => x.ItemViewModel.SelectedItemId, Model.ItemViewModel.Items, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="UpdateOnusDto.AssignedTo" value="@Model.UpdateOnusDto.AssignedTo">
+                </div>
+            </div>
+
+            <div class="form-group form-float">
+                <div class="form-line">
+                    <input type="text" class="form-control" name="UpdateOnusDto.Progress" value="@Model.UpdateOnusDto.Progress">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="@Url.Action("Index", "Onus")" cl class="btn btn-default waves-effect">@L("Back")</a>
+                    <button id="RegisterButton" class="btn bg-pink waves-effect" type="submit">@L("Update")</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

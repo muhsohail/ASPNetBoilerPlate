@@ -1,0 +1,224 @@
+﻿@model List<ExpenseManager.Settlement.Dto.SettlementDto>
+@using Abp.Web.Mvc.Extensions
+
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Settlement/Index.js")
+}
+<div class="row clearfix">
+
+    <ul class="nav nav-tabs tab-nav-right" role="tablist">
+        <li role="presentation" class="active"><a href="#activeSettlements" data-toggle="tab">Active</a></li>
+        <li role="presentation"><a href="#inActiveSettlements" data-toggle="tab">Inactive</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane animated fadeIn active" id="activeSettlements">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("ActiveSettlementEntries")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Amount")</th>
+                                <th>@L("SettlementTypeName")</th>
+                                <th>@L("ReturnDate")</th>
+                                <th>@L("ReturnedBy")</th>
+                                <th>@L("ReturnedTo")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                var activeSettlemenmts = Model.Where(x => !x.IsDeleted);
+                                foreach (var item in activeSettlemenmts)
+                                {
+                                    <tr>
+                                        <td>@item.Amount</td>
+                                        <td>@item.SettlementTypeName</td>
+                                        <td>@item.ReturnDate.ToString("dd-MMM-yyyy")</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.ReturnedToName</td>
+
+                                        <td class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                <i class="material-icons">menu</i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#" class="waves-effect waves-block edit-settlement" data-settlement-id="@item.Id" data-toggle="modal" data-target="#SettlementEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                                <li><a href="#" class="waves-effect waves-block delete-settlement" data-settlement-id="@item.Id" data-settlement-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            }
+
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#SettlementCreateModal">
+                        <i class="material-icons">add</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane animated fadeIn" id="inActiveSettlements">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("InActiveSettlementEntries")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Amount")</th>
+                                <th>@L("SettlementTypeName")</th>
+                                <th>@L("ReturnDate")</th>
+                                <th>@L("ReturnedBy")</th>
+                                <th>@L("ReturnedTo")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                var inActiveSettlemenmts = Model.Where(x => x.IsDeleted);
+
+                                foreach (var item in inActiveSettlemenmts)
+                                {
+                                    <tr>
+                                        <td>@item.Amount</td>
+                                        <td>@item.SettlementTypeName</td>
+                                        <td>@item.ReturnDate.ToString("dd-MMM-yyyy")</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.ReturnedToName</td>
+
+                                        <td class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                                <i class="material-icons">menu</i>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#" class="waves-effect waves-block undo-settlement" data-settlement-id="@item.Id" data-settlement-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("UndoDelete")</a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="SettlementCreateModal" tabindex="-1" role="dialog" aria-labelledby="SettlementCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewSettlement")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Settlement", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-settlement-details">
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="Amount">
+                                            <label class="form-label">@L("Amount")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="Date" name="ReturnDate" class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <label class="form-label">@L("ReturnDate")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            @Html.DropDownList("Users", (IEnumerable<SelectListItem>)ViewData["Users"], "--Returned To--", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            @Html.DropDownList("SettlementTypes", (IEnumerable<SelectListItem>)ViewData["SettlementTypes"], new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SettlementEditModal" tabindex="-1" role="dialog" aria-labelledby="USettlementEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

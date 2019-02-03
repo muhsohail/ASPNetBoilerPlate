@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="en">
+  <texts>
+    <text name="HomePage" value="Dashboard" />
+    <text name="About" value="About" />
+    <text name="WellcomeMessage" value="Welcome to ExpenseManager!" />
+
+    <text name="FormIsNotValidMessage" value="Form is not valid. Please check and fix errors." />
+    <text name="TenantNameCanNotBeEmpty" value="Tenant name can not be empty" />
+
+    <text name="InvalidUserNameOrPassword" value="Invalid user name or password" />
+    <text name="ThereIsNoTenantDefinedWithName{0}" value="There is no tenant defined with name {0}" />
+    <text name="TenantIsNotActive" value="Tenant {0} is not active." />
+    <text name="UserIsNotActiveAndCanNotLogin" value="User {0} is not active and can not log in." />
+    <text name="UserEmailIsNotConfirmedAndCanNotLogin">Your email address is not confirmed. You can not login</text>
+    <text name="UserLockedOutMessage">The user account has been locked out. Please try again later.</text>
+    <text name="PleaseEnterLoginInformation" value="Please enter login information" />
+    <text name="TenancyName" value="Tenancy name" />
+    <text name="UserNameOrEmail" value="User name or email" />
+    <text name="Password" value="Password" />
+    <text name="RememberMe" value="Remember me" />
+    <text name="LogIn" value="Log in" />
+
+    <text name="LoginFailed" value="Login failed!" />
+
+    <text name="NameSurname" value="Name surname" />
+    <text name="UserName" value="User name" />
+    <text name="Name" value="Name" />
+    <text name="Surname" value="Surname" />
+    <text name="EmailAddress" value="Email address" />
+
+    <text name="Tenants" value="Tenants" />
+    <text name="SavedSuccessfully" value="Saved successfully" />
+    <text name="CreateNewTenant" value="Create new tenant" />
+    <text name="AdminEmailAddress" value="Admin email address" />
+    <text name="Save" value="Save" />
+    <text name="Cancel" value="Cancel" />
+    <text name="TenantName_Regex_Description" value="Tenant name must be at least 2 chars, starts with a letter and continue with letter, number, dash or underscore." />
+    <text name="DefaultPasswordIs" value="Default password is {0}" />
+    <text name="CanBeEmptyToLoginAsHost" value="Can be empty to login as host." />
+    <text name="Register" value="Register" />
+    <text name="OrLoginWith" value="Or login with" />
+    <text name="WaitingForActivationMessage" value="Your account is waiting to be activated by system admin." />
+    <text name="TenantSelection" value="Tenant Selection" />
+    <text name="TenantSelection_Detail" value="Please select one of the following tenants." />
+    <text name="Logout" value="Logout" />
+
+    <text name="RegisterFormUserNameInvalidMessage">Please dont enter an email address for username.</text>
+
+    <text name="DatabaseConnectionString" value="Database connection string" />
+    <text name="Users" value="Users" />
+    <text name="IsActive" value="Is active" />
+    <text name="FullName" value="Full name" />
+    <text name="CreateNewUser" value="Create new user" />
+    <text name="Yes" value="Yes" />
+    <text name="No" value="No" />
+    <text name="Optional" value="Optional" />
+    <text name="LeaveEmptyToSwitchToHost">Leave empty to switch to the host</text>
+
+    <text name="CurrentTenant">Current tenant</text>
+    <text name="NotSelected">Not selected</text>
+    <text name="Change">Change</text>
+    <text name="ChangeTenant">Change tenant</text>
+
+    <text name="MultiLevelMenu">Multi Level Menu</text>
+    <text name="Back">Back</text>
+    <text name="SuccessfullyRegistered">Successfully registered</text>
+    <text name="WaitingForEmailActivation">Your email address should be activated</text>
+    <text name="Roles">Roles</text>
+
+    <text name="Actions">Actions</text>
+    <text name="RoleName">Role Name</text>
+    <text name="DisplayName">Display Name</text>
+    <text name="CreateNewRole">Create New Role</text>
+    <text name="EditRole">Edit Role</text>
+    <text name="EditUser">Edit User</text>
+    <text name="Edit">Edit</text>
+    <text name="Delete">Delete</text>
+    <text name="Expense" value="Expense" />
+    <text name="Expense Entries" value="Expense Entries" />
+    <text name="Amount" value="Amount" />
+    <text name="Date Spent" value="Date Spent" />
+    <text name="Description" value="Description" />
+    <text name="Category" value="Category" />
+
+    <text name="Onus Entries" value="Things To Do Enteries" />
+    <text name="Create new expense" value="Create new expense" />
+    <text name="Pension" value="Pension" />
+    <text name="Onus" value="Things To Do" />
+    <text name="Update" value="Update" />
+    <text name="Editexpense" value="Edit Record" />
+    <text name="Create new onus" value="Create New Record" />
+    <text name="Pension Entries" value="Pension Entries" />
+    <text name="Reason" value="Reason" />
+
+    <text name="Task" value="Task" />
+    <text name="Status" value="Status" />
+    <text name="Assignedto" value="Assigned to" />
+    <text name="Progress" value="Progress" />
+    <text name="EditOnus" value="Edit Record" />
+    <text name="EditPension" value="Edit Record" />
+    <text name="PensionSpentDetails" value="Pension Usage Details" />
+    <text name="Stakeholder" value="Stakeholder" />
+    <text name="EditExpense" value="Edit Record" />
+
+    <text name="EditSettlement" value="Edit Record" />
+    <text name="CreateNewSettlement" value="Create New Record" />
+    <text name="ReturnedTo" value="Returned To" />
+    <text name="ReturnDate" value="Return Date" />
+    <text name="SettlementEntries" value="Settlement Entries" />
+    <text name="Settlement" value="Settlement" />
+    <text name="ManageExpense" value="Manage Expense" />
+    <text name="CreateNewOnus" value="Create New Record" />
+    <text name="TaskAssignedTo" value="Assigned To" />
+    <text name="CreateNewExpense" value="Create New Record" />
+    <text name="PensionUsage" value="Pension Usage" />
+    <text name="PensionReceived" value="Pension Received" />
+    <text name="ManagePension" value="Manage Pension" />
+
+    <text name="PensionReceivableDetails" value="Pension Received Details" />
+    <text name="DateReceived" value="Date Received" />
+    <text name="CreateNewPensionReceivable" value="Create New Record" />
+    <text name="EditPensionReceivable" value="Edit Record" />
+    <text name="DateSpent" value="Date Spent" />
+    <text name="CreateNewPension" value="Create New Record" />
+    <text name="Purpose" value="Purpose" />
+    <text name="UndoDelete" value="Undo Delete" />
+    <text name="InActiveOnusEntries" value="Things To Do (Deleted)" />
+    <text name="ActiveOnusEntries" value="Things To Do (Active)" />
+
+    <text name="CreatedBy" value="Created By" />
+    <text name="CreatedDate" value="Last Updated" />
+    <text name="ReturnedBy" value="Returned By" />
+    <text name="ActiveSettlementEntries" value="Settlement Entries (Active)" />
+    <text name="InActiveSettlementEntries" value="Settlement Entries (Deleted)" />
+
+    <text name="ActiveExpenseEntries" value="Expense Entries (Active)" />
+    <text name="InActiveExpenseEntries" value="Expense Entries (Deleted)" />
+
+    <text name="LoanDetails" value="Loan Details" />
+    <text name="PersonName" value="Person Name" />
+    <text name="LoanAmount" value="Loan Amount" />
+    <text name="AmountReturned" value="Amount Returned" />
+    <text name="ReturnedDate" value="Returned Date" />
+    <text name="EditLoan" value="Edit Record" />
+    <text name="CreateNewLoan" value="Create New Record" />
+    <text name="Loan" value="Loan" />
+
+    <text name="ActiveCharityEntries" value="Charity Enteries (Active)" />
+    <text name="Charity" value="Charity" />
+    <text name="InActiveCharity" value="Charity Enteries (Deleted)" />
+    <text name="CreateNewCharity" value="Create New Record" />
+    <text name="EditCharity" value="Edit Record" />
+    
+    <text name="BankAccountDetails" value="Bank Account Details" />
+    <text name="BankName" value="Bank Name" />
+    <text name="EditBankDetails" value="Edit Record" />
+    <text name="CreateNewBankDetails" value="Create New Record" />
+    <text name="SettlementTypeName" value="Settlement Type" />
+
+    
+  </texts>
+</localizationDictionary>

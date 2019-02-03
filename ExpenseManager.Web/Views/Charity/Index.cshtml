@@ -1,0 +1,360 @@
+﻿@model ExpenseManager.Web.Models.CharityViewModel
+
+@using Abp.Web.Mvc.Extensions
+@using System.Web.Optimization
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Charity/Index.js")
+    @Scripts.Render("~/Bundles/home-index")
+}
+@section styles {
+    <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
+}
+<div class="row clearfix">
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-light-green hover-expand-effect">
+            <div class="icon">
+                <i class="material-icons">forum</i>
+            </div>
+            <div class="content">
+                <div class="text">Toal Amount</div>
+                <div class="number count-to" data-from="0" data-to=@Model.charitySummary.Total data-speed="1000" data-fresh-interval="20"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-orange hover-expand-effect">
+            <div class="icon">
+                <i class="material-icons">person_add</i>
+            </div>
+            <div class="content">
+                <div class="text">Used</div>
+                <div class="number count-to" data-from="0" data-to=@Model.charitySummary.Used data-speed="1000" data-fresh-interval="20"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-cyan hover-expand-effect">
+            <div class="icon">
+                <i class="material-icons">playlist_add_check</i>
+            </div>
+            <div class="content">
+                <div class="text">Remaining</div>
+                <div class="number count-to" data-from="0" data-to=@Model.charitySummary.Pending data-speed="1000" data-fresh-interval="20"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row clearfix">
+
+    <ul class="nav nav-tabs tab-nav-right" role="tablist">
+        <li role="presentation" class="active"><a href="#activeCharity" data-toggle="tab">Active</a></li>
+        <li role="presentation"><a href="#inActiveCharity" data-toggle="tab">Inactive</a></li>
+        <li role="presentation"><a href="#bankAccountDetails" data-toggle="tab">Bank Account Details</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane animated fadeIn active" id="activeCharity">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("ActiveCharityEntries")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Amount")</th>
+                                <th>@L("Date Spent")</th>
+                                <th>@L("Description")</th>
+                                <th>@L("CreatedDate")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.charityDto.Where(x => !x.IsDeleted))
+                            {
+                                <tr>
+                                    <td>@item.Amount</td>
+                                    @if (item.DateSpent.HasValue)
+                                    {
+                                        <td>@item.DateSpent.Value.ToString("dd-MMM-yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.DateSpent</td>
+                                    }
+                                    <td>@item.Purpose</td>
+                                    <td>@item.CreationTime.ToString("dd-MMM-yyyy")</td>
+                                    <td class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">menu</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#" class="waves-effect waves-block edit-charity" data-charity-id="@item.Id" data-toggle="modal" data-target="#CharityEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                            <li><a href="#" class="waves-effect waves-block delete-charity" data-charity-id="@item.Id" data-expense-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#CharityCreateModal">
+                        <i class="material-icons">add</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane animated fadeIn" id="inActiveCharity">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("InActiveCharity")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("Amount")</th>
+                                <th>@L("Date Spent")</th>
+                                <th>@L("Description")</th>
+                                <th>@L("CreatedDate")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.charityDto.Where(x => x.IsDeleted))
+                            {
+                                <tr>
+                                    <td>@item.Amount</td>
+                                    @if (item.DateSpent.HasValue)
+                                    {
+                                        <td>@item.DateSpent.Value.ToString("dd-MMM-yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.DateSpent</td>
+                                    }
+                                    <td>@item.Purpose</td>
+                                    <td>@item.CreationTime.ToString("dd-MMM-yyyy")</td>
+                                    <td class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">menu</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#" class="waves-effect waves-block undo-expense" data-charity-id="@item.Id" data-charity-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("UndoDelete")</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane animated fadeIn" id="bankAccountDetails">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        @L("BankAccountDetails")
+                    </h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@L("BankName")</th>
+                                <th>@L("Amount")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.bankDetailsDto)
+                            {
+                                <tr>
+                                    <td>@item.BankName</td>
+                                    <td>@item.Amount</td>
+                                    <td class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">menu</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#" class="waves-effect waves-block edit-bankdetails" data-bankdetails-id="@item.Id" data-toggle="modal" data-target="#BankDetailsEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                            <li><a href="#" class="waves-effect waves-block delete-bankdetails" data-bankdetails-id="@item.Id" data-bankdetails-name="@item.Amount"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#BankDetailsCreateModal">
+                        <i class="material-icons">add</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="CharityCreateModal" tabindex="-1" role="dialog" aria-labelledby="CharityCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewCharity")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Charity", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-charity-details">
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="Amount">
+                                            <label class="form-label">@L("Amount")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="Date" name="DateSpent" class="form-control" value=@DateTime.Today.ToString("yyyy-MM-dd")>
+                                            <label class="form-label">@L("DateSpent")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="text" id="Purpose" name="Purpose" class="form-control">
+                                            <label class="form-label">@L("Purpose")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="CharityEditModal" tabindex="-1" role="dialog" aria-labelledby="CharityEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="BankDetailsCreateModal" tabindex="-1" role="dialog" aria-labelledby="BankDetailsCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewBankDetails")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CreateBankDetails", "BankDetails", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-charity-details">
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="BankName">
+                                            <label class="form-label">@L("BankName")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="Amount">
+                                            <label class="form-label">@L("Amount")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BankDetailsEditModal" tabindex="-1" role="dialog" aria-labelledby="BankDetailsEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

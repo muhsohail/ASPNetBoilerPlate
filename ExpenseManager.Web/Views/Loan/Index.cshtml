@@ -1,0 +1,214 @@
+﻿@model ExpenseManager.Web.Models.LoanViewModel
+
+@using Abp.Web.Mvc.Extensions
+@using System.Web.Optimization
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Loan/Index.js")
+    @Scripts.Render("~/Bundles/home-index")
+
+}
+@section styles {
+    <link href="~/lib/morris.js/morris.css" rel="stylesheet" />
+}
+
+    <div class="row clearfix">
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-light-green hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">forum</i>
+                </div>
+                <div class="content">
+                    <div class="text">Toal Loan Amount</div>
+                    <div class="number count-to" data-from="0" data-to=@Model.LoanSummary.TotalLoan data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-orange hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">person_add</i>
+                </div>
+                <div class="content">
+                    <div class="text">Returned</div>
+                    <div class="number count-to" data-from="0" data-to=@Model.LoanSummary.Returned data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-cyan hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">playlist_add_check</i>
+                </div>
+                <div class="content">
+                    <div class="text">Pending</div>
+                    <div class="number count-to" data-from="0" data-to=@Model.LoanSummary.Pending data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @L("LoanDetails")
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a id="RefreshButton" href="javascript:void(0);" class="waves-effect waves-block"><i class="material-icons">refresh</i>Refresh</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>@L("PersonName")</th>
+                            <th>@L("LoanAmount")</th>
+                            <th>@L("AmountReturned")</th>
+                            <th>@L("ReturnedDate")</th>
+                            @*<th>@L("ReturnedBy")</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.LoanDto)
+                            {
+                                <tr>
+                                    <td>@item.PersonName</td>
+                                    <td>@item.LoanAmount</td>
+                                    <td>@item.AmountReturned</td>
+
+                                    @if (item.ReturnedDate.HasValue)
+                                    {
+                                        <td>@item.ReturnedDate.Value.ToString("dd-MMM-yyyy")</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+
+                                    }
+
+                                    @*<td>@item.ReturnedByUserName</td>*@
+                                    <td class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">menu</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="#" class="waves-effect waves-block edit-loan" data-loan-id="@item.Id" data-toggle="modal" data-target="#LoanEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                            <li><a href="#" class="waves-effect waves-block delete-loan" data-loan-id="@item.Id" data-loan-name="@item.LoanAmount"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#LoanCreateModal">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="LoanCreateModal" tabindex="-1" role="dialog" aria-labelledby="LoanCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>@L("CreateNewLoan")</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Loan", FormMethod.Post))
+                {
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane animated fadeIn active" id="create-Loan-details">
+
+
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="PersonName">
+                                            <label class="form-label">@L("PersonName")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="LoanAmount">
+                                            <label class="form-label">@L("LoanAmount")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix" style="margin-top:10px;">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input class="form-control" type="text" name="AmountReturned">
+                                            <label class="form-label">@L("AmountReturned")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="Date" id="Purpose" name="ReturnedDate" class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <label class="form-label">@L("ReturnedDate")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">@L("Cancel")</button>
+                        <button type="submit" class="btn btn-primary waves-effect">@L("Save")</button>
+                    </div>
+                }
+
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="LoanEditModal" tabindex="-1" role="dialog" aria-labelledby="LoanEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@model ExpenseManager.Web.Models.UpdatePensionViewModel
+
+@using ExpenseManager.Web.Models.Common.Modals
+@using Abp.Web.Mvc.Extensions
+
+@{
+    Layout = null;
+}
+
+@{
+    ViewBag.ActiveMenu = PageNames.Users; //The menu item will be active for this page.
+}
+@section scripts
+{
+    @Html.IncludeScript("~/Views/Pension/_EditPension.js")
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditPension")))
+
+<div class="card">
+    <div class="body">
+    
+    @using (Html.BeginForm("Update", "Pension", FormMethod.Post))
+    {
+
+        @Html.HiddenFor(model => model.UpdatePensionDto.Id)
+        @Html.HiddenFor(model => model.UpdatePensionDto.StakeholderId)
+
+
+        @Html.AntiForgeryToken()
+
+    if (@ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fa fa-warning"></i> @ViewBag.ErrorMessage
+        </div>
+    }
+
+
+    <div class="form-group form-float">
+        <div class="form-line">
+            <input type="text" class="form-control" name="UpdatePensionDto.Amount" value="@Model.UpdatePensionDto.Amount">
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-sm-12">
+            <div class="form-group form-float">
+                <div class="form-line">
+                    @*@Html.DropDownList("Stakeholders", (IEnumerable<SelectListItem>)ViewData["Stakeholders"], new { @class = "form-control" })*@
+                    @Html.DropDownListFor(x => x.StakeholderViewModel.SelectedItemId, Model.StakeholderViewModel.Items, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-float">
+        <div class="form-line">
+            <input type="text" class="form-control" name="UpdatePensionDto.Reason" value="@Model.UpdatePensionDto.Reason">
+        </div>
+    </div>
+
+    <div class="form-group form-float">
+        <div class="form-line">
+            <input type="Date" class="form-control" name="UpdatePensionDto.DateSpent" value="@Model.UpdatePensionDto.DateSpent.Value.ToString("yyyy-MM-dd")">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Index", "Pension")" cl class="btn btn-default waves-effect">@L("Back")</a>
+            <button id="RegisterButton" class="btn bg-pink waves-effect" type="submit">@L("Update")</button>
+        </div>
+    </div>
+}
+    </div>
+</div>
